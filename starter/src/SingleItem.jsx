@@ -1,10 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import customFetch from './utils';
-import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 const SingleItem = ({ item }) => {
-  const [isDone, setIsDone] = useState(item.isDone);
   const queryClient = useQueryClient();
 
   const { mutate: editTask, isLoading } = useMutation({
@@ -14,7 +12,6 @@ const SingleItem = ({ item }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       toast.success('task updated');
-      setIsDone(!isDone);
     },
     onError: (error) => {
       toast.error(error.response.data.msg);
@@ -25,7 +22,7 @@ const SingleItem = ({ item }) => {
     <div className="single-item">
       <input
         type="checkbox"
-        checked={isDone}
+        checked={item.isDone}
         onChange={() => editTask({ taskId: item.id, isDone: !item.isDone })}
         disabled={isLoading}
       />
