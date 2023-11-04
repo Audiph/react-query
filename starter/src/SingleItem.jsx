@@ -8,7 +8,9 @@ const SingleItem = ({ item }) => {
   const queryClient = useQueryClient();
 
   const { mutate: editTask, isLoading } = useMutation({
-    mutationFn: (id, done) => customFetch.patch(`/${id}`, { isDone: !done }),
+    mutationFn: ({ taskId, isDone }) => {
+      return customFetch.patch(`/${taskId}`, { isDone });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       toast.success('task updated');
@@ -19,16 +21,12 @@ const SingleItem = ({ item }) => {
     },
   });
 
-  const handleChange = () => {
-    editTask(item.id, isDone);
-  };
-
   return (
     <div className="single-item">
       <input
         type="checkbox"
         checked={isDone}
-        onChange={handleChange}
+        onChange={() => editTask({ taskId: item.id, isDone: !item.isDone })}
         disabled={isLoading}
       />
       <p
