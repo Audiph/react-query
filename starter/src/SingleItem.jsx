@@ -31,6 +31,7 @@ const SingleItem = ({ item }) => {
           textTransform: 'capitalize',
           textDecoration: item.isDone && 'line-through',
         }}
+        disabled={isLoading}
       >
         {item.title}
       </p>
